@@ -1,6 +1,9 @@
 import curses
 import curses.textpad
 from curses import wrapper
+
+import renderer
+
 import time
 
 '''
@@ -16,21 +19,19 @@ title_path = res_path + 'title-chess.txt'
 instructions_str = '''Welcome to terminal chess.  It's not as sad as it sounds, it's actually a really cool game!  Here are the instructions:
 Press any key to continue ...'''
 
-currentTime = int(round(time.time() * 1000))
+currentTime = time.time()
 frameRate = 30
 
-# Return the current system time in milliseconds
-def getCurrentTime():
-	return int(round(time.time() * 1000))
+# Object to render objects to the screen
+ren = renderer.Renderer()
 
 def getDeltaTime():
-	deltaTime = getCurrentTime() - currentTime
+        global currentTime
+        deltaTime = time.time() - currentTime
 
 	# Update current time
-	global currentTime 
-	currentTime = getCurrentTime()
-
-	return deltaTime
+        currentTime = time.time()
+        return deltaTime
 
 # Print multiple lines to the console that are separated by newlines
 def printMultiLine(stdscr, strings, y, x):
@@ -38,19 +39,20 @@ def printMultiLine(stdscr, strings, y, x):
 		stdscr.addstr(y+offset, x, line)
 
 def printInstructions(stdscr):
-	title_str = ""
-	with open(title_path, 'r') as f:
-		title_str = f.read()
+    title_str = ""
+    with open(title_path, 'r') as f:
+        title_str = f.read()
+    title_obj = renderer.GameObject(0, 0, title_str)
+    instructions_obj = renderer.GameObject(25, 0, instructions_str)
 
-	# Wait for user to hit a key
-	while True:
-		k = stdscr.getch()
-		if k != -1:
-			break
+    ren.addObj(title_obj)
+    ren.addObj(instructions_obj)
 
-		printMultiLine(stdscr, title_str, 0, 0)
-		printMultiLine(stdscr, instructions_str, 25, 0)
-		stdscr.refresh()
+    # Wait for user to hit a key
+    while True:
+            k = stdscr.getch()
+            if k != -1:
+                    break
 
 # Calibration function to move art around the screen
 def calibration(stdscr, strings):
@@ -85,24 +87,24 @@ def calibration(stdscr, strings):
 			stdscr.refresh()
 
 			# Wait to hit desired frame rate
-			desired_delta = int(round(1/frameRate))
+			desired_delta = 1/frameRate
 			difference = desired_delta - deltaTime
 			if difference > 0:
-				sleep(float(difference/1000))
+				time.sleep(difference)
 
 # Main function
 def main(stdscr):
-	# Init
-	stdscr.nodelay(True)
-	curses.curs_set(0)
+    # Init
+    stdscr.nodelay(True)
+    curses.curs_set(0)
+    stdscr.clear()
 
-	# Calibrate the art
-	calibration(stdscr, ['art one', 'art two', 'art three'])
+    # Start the renderer
+    ren.start(stdscr)
 
-	# Clear the screen
-	stdscr.clear()
+    printInstructions(stdscr)
 
-	printInstructions(stdscr)
+    # Game loop
 
 # Entrypoint
 if __name__ == '__main__':
