@@ -51,10 +51,7 @@ class Renderer:
 
         currentTime = time.time()
 
-        try:
-            threading.Thread(target=self.renderLoop, args=(stdscr,)).start()
-        except (KeyboardInterrupt, SystemExit):
-            sys.exit()
+        threading.Thread(target=self.renderLoop, args=(stdscr,), daemon=True).start()
 
 # Represents a gameobject
 class GameObject:
