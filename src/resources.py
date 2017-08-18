@@ -13,7 +13,8 @@ resources = {
     'bishop-black' : '../res/pieces/bishop-black.txt',
     'knight-black' : '../res/pieces/knight-black.txt',
     'queen-black' : '../res/pieces/queen-black.txt',
-    'king-black' : '../res/pieces/king-black.txt'
+    'king-black' : '../res/pieces/king-black.txt',
+    'board' : '../res/board.txt'
 }
 
 # Get the resource

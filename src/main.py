@@ -109,6 +109,7 @@ def main(stdscr):
     # Main menu
     mainMenu(stdscr)
 
+    ren.addObj(renderer.GameObject(0, 0, res.getResource('board')))
     ren.addObj(renderer.GameObject(0, 0, res.getResource('pawn-white')))
     ren.addObj(renderer.GameObject(5, 0, res.getResource('knight-white')))
     ren.addObj(renderer.GameObject(10, 0, res.getResource('bishop-white')))
