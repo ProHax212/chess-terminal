@@ -3,15 +3,9 @@ import curses.textpad
 from curses import wrapper
 
 import renderer
+import resources as res
 
 import time
-
-'''
-TODO: Add a class for gameobjects
-Seperate thread will loop through list of gameobjects and render to the screen
-This thread will loop at the desired framerate
-Whenever you want to render something new, just add it to the list
-'''
 
 res_path = '../res/'
 title_path = res_path + 'title-chess.txt'
@@ -23,7 +17,7 @@ currentTime = time.time()
 frameRate = 30
 
 # Object to render objects to the screen
-ren = renderer.Renderer()
+ren = renderer.Renderer(frameRate)
 
 def getDeltaTime():
         global currentTime
@@ -38,11 +32,17 @@ def printMultiLine(stdscr, strings, y, x):
 	for offset, line in enumerate(strings.splitlines()):
 		stdscr.addstr(y+offset, x, line)
 
-def printInstructions(stdscr):
-    title_str = ""
-    with open(title_path, 'r') as f:
-        title_str = f.read()
-    title_obj = renderer.GameObject(0, 0, title_str)
+# Return the string in the resource
+def getResource(resourcePath):
+    returnStr = ""
+    with open(resourcePath, 'r') as f:
+        returnStr = f.read()
+
+    return returnStr
+
+# First screen that the user sees
+def mainMenu(stdscr):
+    title_obj = renderer.GameObject(0, 0, getResource(title_path))
     instructions_obj = renderer.GameObject(25, 0, instructions_str)
 
     ren.addObj(title_obj)
@@ -53,6 +53,9 @@ def printInstructions(stdscr):
             k = stdscr.getch()
             if k != -1:
                     break
+
+    # Clear the rendered objects 
+    ren.clearObjects()
 
 # Calibration function to move art around the screen
 def calibration(stdscr, strings):
@@ -92,6 +95,7 @@ def calibration(stdscr, strings):
 			if difference > 0:
 				time.sleep(difference)
 
+
 # Main function
 def main(stdscr):
     # Init
@@ -102,9 +106,27 @@ def main(stdscr):
     # Start the renderer
     ren.start(stdscr)
 
-    printInstructions(stdscr)
+    # Main menu
+    mainMenu(stdscr)
+
+    ren.addObj(renderer.GameObject(0, 0, res.getResource('pawn-white')))
+    ren.addObj(renderer.GameObject(5, 0, res.getResource('knight-white')))
+    ren.addObj(renderer.GameObject(10, 0, res.getResource('bishop-white')))
+    ren.addObj(renderer.GameObject(15, 0, res.getResource('king-white')))
 
     # Game loop
+    while True:
+        deltaTime = getDeltaTime()
+
+        # Get Input
+        k = stdscr.getch()
+        if k != -1:
+            break
+
+        # Wait to keep framerate
+        desiredDelta = 1/frameRate
+        if deltaTime < desiredDelta:
+            time.sleep(desiredDelta - deltaTime)
 
 # Entrypoint
 if __name__ == '__main__':

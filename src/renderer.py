@@ -35,8 +35,11 @@ class Renderer:
 
     def renderLoop(self, stdscr):
         while True:
+            # Clear the screen
+            stdscr.erase()
             deltaTime = getDeltaTime()
 
+            # Draw all of the objects in order
             for obj in self.gameObjects:
                 printObj(stdscr, obj)
 
@@ -44,6 +47,10 @@ class Renderer:
             targetDelay = 1/self.frameRate
             if targetDelay > deltaTime:
                 time.sleep(targetDelay - deltaTime)
+
+    # Clear all of the objects on the screen
+    def clearObjects(self):
+        self.gameObjects = []
 
     # Starts rendering on a separate thread
     def start(self, stdscr):
@@ -60,3 +67,14 @@ class GameObject:
         self.x = x
         self.y = y
         self.enabled = True
+        self.width, self.height = self.getWidthHeight(text)
+
+    # Get the width and height (cols, rows) for the text
+    def getWidthHeight(self, string):
+        width = height = 0
+
+        for line in string.splitlines():
+            width = max(width, len(line))
+            height += 1
+
+        return width, height
