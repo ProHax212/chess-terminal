@@ -5,6 +5,8 @@ from curses import wrapper
 import renderer
 import resources as res
 
+from game import GameObject
+
 import time
 
 res_path = '../res/'
@@ -42,8 +44,8 @@ def getResource(resourcePath):
 
 # First screen that the user sees
 def mainMenu(stdscr):
-    title_obj = renderer.GameObject(0, 0, getResource(title_path))
-    instructions_obj = renderer.GameObject(25, 0, instructions_str)
+    title_obj = GameObject(0, 0, getResource(title_path))
+    instructions_obj = GameObject(25, 0, instructions_str)
 
     ren.addObj(title_obj)
     ren.addObj(instructions_obj)
@@ -109,11 +111,11 @@ def main(stdscr):
     # Main menu
     mainMenu(stdscr)
 
-    ren.addObj(renderer.GameObject(0, 0, res.getResource('board')))
-    ren.addObj(renderer.GameObject(0, 0, res.getResource('pawn-white')))
-    ren.addObj(renderer.GameObject(5, 0, res.getResource('knight-white')))
-    ren.addObj(renderer.GameObject(10, 0, res.getResource('bishop-white')))
-    ren.addObj(renderer.GameObject(15, 0, res.getResource('king-white')))
+    #ren.addObj(GameObject(0, 0, res.getResource('board')))
+    ren.addObj(GameObject(0, 0, res.getResource('pawn-white')))
+    ren.addObj(GameObject(5, 0, res.getResource('knight-white')))
+    ren.addObj(GameObject(10, 0, res.getResource('bishop-white')))
+    ren.addObj(GameObject(15, 0, res.getResource('king-white')))
 
     # Game loop
     while True:
