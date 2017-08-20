@@ -14,7 +14,9 @@ resources = {
     'knight-black' : '../res/pieces/knight-black.txt',
     'queen-black' : '../res/pieces/queen-black.txt',
     'king-black' : '../res/pieces/king-black.txt',
-    'board' : '../res/board.txt'
+    'board' : '../res/board.txt',
+    'title' : '../res/title-chess.txt',
+    'instructions' : '../res/instructions.txt'
 }
 
 # Get the resource

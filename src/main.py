@@ -4,22 +4,14 @@ from curses import wrapper
 
 import renderer
 import resources as res
+import chess
 
 from game import GameObject
 
 import time
 
-res_path = '../res/'
-title_path = res_path + 'title-chess.txt'
-
-instructions_str = '''Welcome to terminal chess.  It's not as sad as it sounds, it's actually a really cool game!  Here are the instructions:
-Press any key to continue ...'''
-
 currentTime = time.time()
 frameRate = 30
-
-# Object to render objects to the screen
-ren = renderer.Renderer(frameRate)
 
 def getDeltaTime():
         global currentTime
@@ -41,23 +33,6 @@ def getResource(resourcePath):
         returnStr = f.read()
 
     return returnStr
-
-# First screen that the user sees
-def mainMenu(stdscr):
-    title_obj = GameObject(0, 0, getResource(title_path))
-    instructions_obj = GameObject(25, 0, instructions_str)
-
-    ren.addObj(title_obj)
-    ren.addObj(instructions_obj)
-
-    # Wait for user to hit a key
-    while True:
-            k = stdscr.getch()
-            if k != -1:
-                    break
-
-    # Clear the rendered objects 
-    ren.clearObjects()
 
 # Calibration function to move art around the screen
 def calibration(stdscr, strings):
@@ -105,31 +80,35 @@ def main(stdscr):
     curses.curs_set(0)
     stdscr.clear()
 
-    # Start the renderer
+    # Create Renderer
+    ren = renderer.Renderer(frameRate)
     ren.start(stdscr)
 
-    # Main menu
-    mainMenu(stdscr)
+    # Create game
+    chessGame = chess.ChessGame(stdscr, ren)
+    chessGame.start()
 
     #ren.addObj(GameObject(0, 0, res.getResource('board')))
-    ren.addObj(GameObject(0, 0, res.getResource('pawn-white')))
-    ren.addObj(GameObject(5, 0, res.getResource('knight-white')))
-    ren.addObj(GameObject(10, 0, res.getResource('bishop-white')))
-    ren.addObj(GameObject(15, 0, res.getResource('king-white')))
+    #ren.addObj(GameObject(0, 0, res.getResource('pawn-white')))
+    #ren.addObj(GameObject(5, 0, res.getResource('knight-white')))
+    #ren.addObj(GameObject(10, 0, res.getResource('bishop-white')))
+    #ren.addObj(GameObject(0, 7, res.getResource('king-white')))
+    #ren.addObj(GameObject(5, 7, res.getResource('queen-white')))
+    #ren.addObj(GameObject(10, 7, res.getResource('rook-white')))
 
     # Game loop
-    while True:
-        deltaTime = getDeltaTime()
-
-        # Get Input
-        k = stdscr.getch()
-        if k != -1:
-            break
-
-        # Wait to keep framerate
-        desiredDelta = 1/frameRate
-        if deltaTime < desiredDelta:
-            time.sleep(desiredDelta - deltaTime)
+#    while True:
+#        deltaTime = getDeltaTime()
+#
+#        # Get Input
+#        k = stdscr.getch()
+#        if k != -1:
+#            break
+#
+#        # Wait to keep framerate
+#        desiredDelta = 1/frameRate
+#        if deltaTime < desiredDelta:
+#            time.sleep(desiredDelta - deltaTime)
 
 # Entrypoint
 if __name__ == '__main__':

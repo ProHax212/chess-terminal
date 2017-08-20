@@ -1,5 +1,9 @@
+# Base class for the type of game you want to make
 class Game:
-	pass
+	def __init__(self, stdscr, ren):
+		self.ren = ren
+		self.gameObjects = []
+		self.stdscr = stdscr
 
 # Represents a gameobject for a game
 class GameObject:
