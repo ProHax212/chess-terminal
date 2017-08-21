@@ -59,4 +59,4 @@ class Renderer:
         currentTime = time.time()
 
         threading.Thread(target=self.renderLoop, args=(stdscr,), daemon=True).start()
-
+pass

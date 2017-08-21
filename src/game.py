@@ -1,3 +1,5 @@
+import game
+
 # Base class for the type of game you want to make
 class Game:
 	def __init__(self, stdscr, ren):
