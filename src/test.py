@@ -20,12 +20,12 @@ def main(stdscr):
 	obj = game.GameObject(10, 10, "Hello World")
 	ren.addObj(obj)
 	for i in range(100):
-		time.sleep(1)
+		time.sleep(.1)
 		k = usrinp.lastKey
 		if k == -1:
 			obj.text = "No key pressed"
 		else:
-			obj.text = str(unichr(k))
+			obj.text = str(k)
 
 
 if __name__ == "__main__":
