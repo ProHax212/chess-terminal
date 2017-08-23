@@ -1,14 +1,16 @@
 # Create a scene by placing asset objects around the screen
 import resources
 import renderer
-import game
+import framerate
 import userinput
+import game
 
 from curses import wrapper
 import curses.textpad
 
 usrinp = userinput.UserInput()
 ren = renderer.Renderer()
+fr = framerate.FrameRate()
 
 def moveResource(obj):
 	global ren
@@ -41,53 +43,50 @@ def moveResource(obj):
 			break
 
 def main(stdscr):
-	prompt = "Enter asset name: "
 	stdscr.nodelay(1)
 	stdscr.clear()
 
+	prompt = "Enter asset name: "
+
 	# Create Renderer
-	global ren
-	ren.start(stdscr)
+	#global ren
+	#ren.start(stdscr)
 
 	# Create input engine
-	global usrinp
-	usrinp.start(stdscr)
+	#global usrinp
+	#usrinp.start(stdscr)
+
+	# Framerate
+	global fr
 
 	height, width = stdscr.getmaxyx()
 
-	promptObj = game.GameObject(height-1, 0, prompt)
-	resourceNameObj = game.GameObject(height-1, len(promptObj.text)+1, "")
+	#promptObj = game.GameObject(height-1, 0, prompt)
+	#resourceNameObj = game.GameObject(height-1, len(promptObj.text)+1, "")
 
-	ren.addObj(promptObj)
-	ren.addObj(resourceNameObj)
+	#ren.addObj(promptObj)
 	while True:
 		height, width = stdscr.getmaxyx()
 
-		promptObj.y = height-1
-		resourceNameObj.y = height-1
-
-		k = usrinp.lastKey
-
-		if k != -1:
-			if k == 10:
-				moveResource(game.GameObject(0, 0, resources.getResource(resourceNameObj.text.strip())))
-			else:
-				resourceNameObj.text = k
+		#promptObj.y = height-1
 
 		# Create a window to use the textbox in
-#		win = stdscr.subwin(height-1, len(prompt)+1)
-#
-#		tb = curses.textpad.Textbox(win, insert_mode=True)
-#
-#		resourceName = tb.edit().strip()	
+		stdscr.addstr(height-2, 0, prompt)
+		win = stdscr.subwin(height-2, len(prompt)+1)
+		tb = curses.textpad.Textbox(win, insert_mode=True)
+		resourceName = tb.edit().strip()	
 
-		# Get the resource
-
-
-		k = usrinp.lastKey
-		if k == ord('q'):
-			ren.removeObj(obj)
-			break
+		try:
+			resourceAscii = resources.getResource(resourceName)
+			stdscr.addstr(0, 0, resourceAscii)
+			#obj = game.GameObject(0, 0, resources.getResource(resourceName))
+			#ren.addObj(obj)
+		except KeyError:
+			stdscr.addstr(height-3, 0, "Resource not found")
+			#ren.addObj(game.GameObject(height-2, 0, "Resource not found"))
+				
+		stdscr.erase()
+		stdscr.refresh()
 
 if __name__ == '__main__':
 	wrapper(main)	
